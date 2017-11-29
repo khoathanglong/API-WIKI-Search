@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Wiki Search</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class='container text-center'>
+	<div>Made by Long Khoa</div>
+	<h1>Wikipedia Searching Tool</h1>
+	<form>
+	  <input placeholder='search anything here' type='text' id='searchBox'></input><br><br>
+	  <button id='btn1' type='button' class='btn'>search</button>
+	  <button id='btn2' type='button' class='btn'><a href='https://en.wikipedia.org/wiki/Special:Random' target='blank'>random search</a></button>
+	<div id='search' class='text-justify'></div>
+	</form>
+</div>
+</body>
+<style>
+	body{
+		background:#741B1B;
+		color: #EBEBEB;
+	}
+	a{
+		text-decoration: none;
+		color: black;
+	}
+	input, #btn1{
+		color: black;
+	}
+</style>
+<script>
+	$('#btn1').on('click',function(){
+		var searchValue=$('#searchBox').val();
+		$.get('https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='+searchValue,function(result){
+   			console.log(result)
+   			var html=''
+   			html+='<div class="display"><h1>Keyword: '+result[0]+'<h1>'
+   			for (var  j= 0; j < result[1].length; j++) {
+   				var content= '<h4>'+(j+1)+'. '+result[1][j]+' :'+result[2][j]+
+   							' (<a class="readMore" href="'+result[3][j]+'" target="blank">read more...</a>)</h4><br></div>'
+   				html+=content
+   			}
+   			$('#search').hide()
+   						.html(html)
+   						.slideDown(1000)
+   						.css({'color':'#EBEBEB'})
+   			$('.readMore').css({'color':'#00FF40'})
+   			$('h4').css({'background':'#741B1B','border':'solid 1px #FB8484','margin-bottom':'-15px','padding':'15px'})
+   		},'jsonp')
+	})
+    
+    $(window).keydown(function(e){
+    	if(e.key=='Enter'){
+    		e.preventDefault() //if not use this, when pressing enter, the text will disapear.
+    		$('#btn1').trigger('click')
+    	}
+    })
+    	
+
+</script>
+</html>
